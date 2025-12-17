@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+
+  <!-- スマホ対応 -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>バリアフリー スロープ計算</title>
+
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 16px;
+      background: #f5f5f5;
+    }
+
+    .container {
+      max-width: 420px;
+      margin: auto;
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      font-size: 20px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    label {
+      font-size: 14px;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    input, select, button {
+      width: 100%;
+      font-size: 16px;
+      padding: 10px;
+      margin-bottom: 12px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      background-color: #007aff;
+      color: white;
+      border: none;
+      font-weight: bold;
+    }
+
+    button:active {
+      background-color: #005ecb;
+    }
+
+    .result {
+      background: #eef5ff;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 15px;
+    }
+
+    .note {
+      font-size: 12px;
+      color: #555;
+      margin-top: 10px;
+    }
+
+    .error {
+      color: red;
+      font-size: 14px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>バリアフリー スロープ計算</h1>
+
+    <label>高さ（cm）</label>
+    <input id="height" type="number" step="0.1" placeholder="例：15">
+
+    <label>勾配（比）</label>
+    <select id="slope">
+      <option value="12">1 : 12（推奨）</option>
+      <option value="10">1 : 10（介助者必要）</option>
+      <option value="8">1 : 8（原則不可）</option>
+    </select>
+
+    <button id="calcBtn" type="button">計算する</button>
+
+    <div id="message" class="error"></div>
+    <div id="result" class="result" style="display:none;"></div>
+
+    <div class="note">
+      ※ 車椅子対応の標準勾配は 1:12（約4.8°）
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      document.getElementById("calcBtn").addEventListener("click", calc);
+    });
+
+    function calc() {
+      const h = parseFloat(document.getElementById("height").value);
+      const slope = parseFloat(document.getElementById("slope").value);
+
+      const message = document.getElementById("message");
+      const result = document.getElementById("result");
+
+      message.textContent = "";
+      result.style.display = "none";
+
+      if (isNaN(h) || h <= 0) {
+        message.textContent = "高さを正しく入力してください";
+        return;
+      }
+
+      const length = h * slope;
+      const angle = Math.atan(1 / slope) * 180 / Math.PI;
+
+      result.style.display = "block";
+      result.innerHTML =
+        `スロープの長さ：<strong>${length.toFixed(1)} cm</strong><br>` +
+        `角度：<strong>${angle.toFixed(2)}°</strong>`;
+    }
+  </script>
+</body>
+</html>
